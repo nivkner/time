@@ -39,7 +39,7 @@
 #[cfg(target_os = "redox")] extern crate syscall;
 #[cfg(unix)] extern crate libc;
 #[cfg(windows)] extern crate winapi;
-#[cfg(feature = "rustc-serialize")] extern crate rustc_serialize;
+#[cfg(feature = "serde")] #[macro_use] extern crate serde;
 
 #[cfg(test)] #[macro_use] extern crate log;
 
@@ -71,7 +71,7 @@ static NSEC_PER_SEC: i32 = 1_000_000_000;
 /// For example a timespec of 1.2 seconds after the beginning of the epoch would
 /// be represented as {sec: 1, nsec: 200000000}.
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
-#[cfg_attr(feature = "rustc-serialize", derive(RustcEncodable, RustcDecodable))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Timespec { pub sec: i64, pub nsec: i32 }
 /*
  * Timespec assumes that pre-epoch Timespecs have negative sec and positive
@@ -295,7 +295,7 @@ pub fn tzset() {}
 // FIXME: use c_int instead of i32?
 #[repr(C)]
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
-#[cfg_attr(feature = "rustc-serialize", derive(RustcEncodable, RustcDecodable))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Tm {
     /// Seconds after the minute - [0, 60]
     pub tm_sec: i32,
